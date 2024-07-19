@@ -16,4 +16,10 @@ datasource db {
 // Models
 model Admin {
   id Int @default(autoincrement()) @id
+  firstName String
+  lastName String
+  email String @unique
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
