@@ -1,0 +1,16 @@
+services:
+  postgresDb:
+    image: postgis/postgis
+    container_name: codegar-postgis-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - ${DATABASE_LISTENING_PORT}:${DATABASE_LISTENING_PORT}
+    volumes:
+      - postgis-data:/var/lib/postgresql/data
+
+volumes:
+  postgis-data:
