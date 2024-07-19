@@ -1,5 +1,6 @@
 import * as argon2 from 'argon2'
 
+//TODO: add unit testing
 export class Encryption {
   async hash(text: string): Promise<string> {
     return await argon2.hash(text)
@@ -29,7 +30,7 @@ export class Encryption {
     return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialCharacters
   }
 
-  securePassword() {
+  securePassword(): string {
     let password = this.generatePassword()
 
     while (!this.validatePassword(password)) {

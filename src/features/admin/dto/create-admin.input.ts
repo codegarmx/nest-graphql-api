@@ -1,7 +1,20 @@
-import { InputType, Int, Field } from '@nestjs/graphql'
+import { InputType, Field } from '@nestjs/graphql'
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator'
 
 @InputType()
 export class CreateAdminInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number
+  @Field()
+  @IsNotEmpty()
+  @MinLength(3)
+  firstName: string
+
+  @Field()
+  @IsNotEmpty()
+  @MinLength(4)
+  lastName: string
+
+  @Field()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string
 }
