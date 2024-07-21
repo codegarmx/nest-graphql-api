@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core'
-import { ValidationPipe } from '@nestjs/common'
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n'
 
 import { appConfig } from '@app/config'
 
@@ -12,13 +12,14 @@ async function bootstrap() {
 
   const config = appConfig()
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
+  app.useGlobalPipes(new I18nValidationPipe())
+
+  app.useGlobalFilters(
+    new PrismaExceptionFilter(),
+    new I18nValidationExceptionFilter({
+      detailedErrors: true,
     }),
   )
-
-  app.useGlobalFilters(new PrismaExceptionFilter())
 
   await app.listen(config.port)
 }

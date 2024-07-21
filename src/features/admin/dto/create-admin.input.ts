@@ -1,5 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql'
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator'
+import { i18nValidationMessage } from 'nestjs-i18n'
 
 @InputType()
 export class CreateAdminInput {
@@ -14,7 +15,7 @@ export class CreateAdminInput {
   lastName: string
 
   @Field()
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'test.HELLO' })
+  @IsEmail({}, { message: 'test.HELLO' })
   email: string
 }
