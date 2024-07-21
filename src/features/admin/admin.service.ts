@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { Admin as AdminModel } from '@prisma/client'
 
 import { PrismaService } from '@app/prisma/prisma.service'
 
 import { Encryption } from '@app/libs'
+
+import { AuthService } from '@app/features/auth/auth.service'
 
 import { CreateAdminInput } from './dto/create-admin.input'
 import { UpdateAdminInput } from './dto/update-admin.input'
@@ -13,17 +19,31 @@ export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly encryption: Encryption,
+    private readonly authService: AuthService,
   ) {}
 
   async create(createAdminInput: CreateAdminInput): Promise<AdminModel> {
     const securePassword = this.encryption.securePassword()
 
-    return await this.prisma.admin.create({
+    //TODO: if user was created, send email
+
+    const newAdmin = await this.prisma.admin.create({
       data: {
         ...createAdminInput,
         password: await this.encryption.hash(securePassword),
       },
     })
+
+    const jwtTokens = await this.authService.createJwtToken({
+      sub: newAdmin.id,
+      name: newAdmin.firstName,
+      lastName: newAdmin.lastName,
+      email: newAdmin.email,
+    })
+
+    await this.updateRefreshToken(newAdmin.id, jwtTokens.refreshToken)
+
+    return newAdmin
   }
 
   async findAll(): Promise<AdminModel[]> {
@@ -38,17 +58,33 @@ export class AdminService {
     return admin
   }
 
-  //TODO: encypt the password
   async update(
     id: number,
     updateAdminInput: UpdateAdminInput,
   ): Promise<AdminModel> {
     if (updateAdminInput?.password) {
+      const hashedPassword = await this.encryption.hash(
+        updateAdminInput.password,
+      )
+
+      Object.assign(hashedPassword, { password: hashedPassword })
     }
     return await this.prisma.admin.update({
       where: { id },
       data: updateAdminInput,
     })
+  }
+
+  async updateRefreshToken(id: number, refreshToken: string): Promise<void> {
+    try {
+      await this.prisma.admin.update({
+        where: { id },
+        data: { refreshToken: await this.encryption.hash(refreshToken) },
+      })
+    } catch (err) {
+      //TODO: create a prisma exception filter
+      throw new BadRequestException('Invalid user!')
+    }
   }
 
   remove(id: number) {

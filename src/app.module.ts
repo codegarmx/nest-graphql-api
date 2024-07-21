@@ -12,6 +12,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 
 import { AdminModule } from './features/admin/admin.module'
+import { AuthModule } from './features/auth/auth.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AdminModule } from './features/admin/admin.module'
     }),
     PrismaModule,
     AdminModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
