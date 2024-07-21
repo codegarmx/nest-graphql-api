@@ -1,4 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql'
+
+import { DeleteItem } from '@app/entities'
+
 import { AdminService } from './admin.service'
 import { Admin } from './entities/admin.entity'
 import { CreateAdminInput } from './dto/create-admin.input'
@@ -28,7 +31,7 @@ export class AdminResolver {
     return this.adminService.update(updateAdminInput.id, updateAdminInput)
   }
 
-  @Mutation(() => Admin)
+  @Mutation(() => DeleteItem)
   removeAdmin(@Args('id', { type: () => Int }) id: number) {
     return this.adminService.remove(id)
   }

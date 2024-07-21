@@ -11,6 +11,8 @@ import { Encryption } from '@app/libs'
 
 import { AuthService } from '@app/features/auth/auth.service'
 
+import { DeleteItem } from '@app/entities'
+
 import { CreateAdminInput } from './dto/create-admin.input'
 import { UpdateAdminInput } from './dto/update-admin.input'
 
@@ -87,7 +89,12 @@ export class AdminService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`
+  async remove(id: number): Promise<DeleteItem> {
+    await this.prisma.admin.delete({ where: { id } })
+
+    return {
+      id,
+      success: true,
+    }
   }
 }

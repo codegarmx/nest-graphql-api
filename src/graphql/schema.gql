@@ -15,9 +15,15 @@ input CreateAdminInput {
   lastName: String!
 }
 
+type DeleteItem {
+  id: Int!
+  message: String
+  success: Boolean!
+}
+
 type Mutation {
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
-  removeAdmin(id: Int!): Admin!
+  removeAdmin(id: Int!): DeleteItem!
   updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
 }
 
