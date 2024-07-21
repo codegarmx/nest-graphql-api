@@ -4,11 +4,13 @@ import {
   IsOptional,
   IsPositive,
   IsStrongPassword,
+  ValidateIf,
 } from 'class-validator'
 import { CreateAdminInput } from './create-admin.input'
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql'
 
-//TODO: add password confirmation
+import { ConfimField } from '@app/decorators'
+
 //TODO: password length should be const in appConfig
 @InputType()
 export class UpdateAdminInput extends PartialType(CreateAdminInput) {
@@ -18,7 +20,7 @@ export class UpdateAdminInput extends PartialType(CreateAdminInput) {
   @IsPositive()
   id: number
 
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsStrongPassword({
     minLength: 12,
@@ -27,4 +29,9 @@ export class UpdateAdminInput extends PartialType(CreateAdminInput) {
     minUppercase: 1,
   })
   password?: string
+
+  @Field({ nullable: true })
+  @ValidateIf((o) => o.password !== undefined)
+  @ConfimField('password', { message: 'Password did not match' })
+  passwordConfirmation?: string
 }

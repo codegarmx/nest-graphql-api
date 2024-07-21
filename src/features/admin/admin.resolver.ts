@@ -16,7 +16,7 @@ export class AdminResolver {
     return this.adminService.create(createAdminInput)
   }
 
-  @Query(() => [Admin], { name: 'admin' })
+  @Query(() => [Admin], { name: 'admins' })
   findAll() {
     return this.adminService.findAll()
   }

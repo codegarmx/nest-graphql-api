@@ -29,6 +29,7 @@ type Mutation {
 
 type Query {
   admin(id: Int!): Admin!
+  admins: [Admin!]!
 }
 
 input UpdateAdminInput {
@@ -36,5 +37,6 @@ input UpdateAdminInput {
   firstName: String
   id: Int!
   lastName: String
-  password: String!
+  password: String
+  passwordConfirmation: String
 }

@@ -30,6 +30,20 @@ import { AuthModule } from './features/auth/auth.module'
         autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
         playground: config.getOrThrow('appConfig.env') !== 'prod',
         sortSchema: true,
+        formatError: (err) => ({
+          //TODO: look for a way to not override message prop
+          message: err.message,
+          ...(err?.extensions?.originalError
+            ? {
+                message: err?.extensions?.originalError['message'],
+              }
+            : {}),
+          error: err?.extensions?.originalError['error'],
+          status:
+            err?.extensions?.status ||
+            err?.extensions?.originalError['statusCode'] ||
+            err?.extensions?.code,
+        }),
       }),
     }),
     PrismaModule,

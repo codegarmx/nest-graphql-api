@@ -3,6 +3,8 @@ import { ValidationPipe } from '@nestjs/common'
 
 import { appConfig } from '@app/config'
 
+import { PrismaExceptionFilter } from '@app/filters'
+
 import { AppModule } from './app.module'
 
 async function bootstrap() {
@@ -15,6 +17,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   )
+
+  app.useGlobalFilters(new PrismaExceptionFilter())
 
   await app.listen(config.port)
 }
