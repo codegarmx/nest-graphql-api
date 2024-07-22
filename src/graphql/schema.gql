@@ -1,0 +1,42 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Admin {
+  email: String!
+  firstName: String!
+  id: Int!
+  lastName: String!
+}
+
+input CreateAdminInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+}
+
+type DeleteItem {
+  id: Int!
+  message: String
+  success: Boolean!
+}
+
+type Mutation {
+  createAdmin(createAdminInput: CreateAdminInput!): Admin!
+  removeAdmin(id: Int!): DeleteItem!
+  updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
+}
+
+type Query {
+  admin(id: Int!): Admin!
+  admins: [Admin!]!
+}
+
+input UpdateAdminInput {
+  email: String
+  firstName: String
+  id: Int!
+  lastName: String
+  password: String
+  passwordConfirmation: String
+}
