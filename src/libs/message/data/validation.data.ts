@@ -3,4 +3,5 @@ export const validationData = {
   minLength: 'El {field} debe contener al menos {vars[0]} carácteres.',
   isEmail: 'El {field} no es una dirección válida.',
   uniqueField: 'El {field} ya se encuentra registrado',
+  fieldExists: 'El {field} no es un {field} registrado',
 }

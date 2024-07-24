@@ -24,6 +24,6 @@ export class Message {
 
       generatedText = generatedText.replace(vars, replacement)
     }
-    return generatedText.replace('{field}', fieldName)
+    return generatedText.replaceAll('{field}', fieldName)
   }
 }

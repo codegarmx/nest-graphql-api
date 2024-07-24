@@ -5,11 +5,16 @@ import {
   IsPositive,
   IsStrongPassword,
   ValidateIf,
+  ValidationArguments,
 } from 'class-validator'
 import { CreateAdminInput } from './create-admin.input'
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql'
 
-import { ConfimField } from '@app/decorators'
+import { ConfimField, FieldExists } from '@app/decorators'
+
+import { Message } from '@app/libs'
+
+const messages = new Message()
 
 //TODO: password length should be const in appConfig
 @InputType()
@@ -18,6 +23,16 @@ export class UpdateAdminInput extends PartialType(CreateAdminInput) {
   @IsNotEmpty()
   @IsInt()
   @IsPositive()
+  @FieldExists(
+    {
+      model: 'admin',
+      field: 'id',
+    },
+    {
+      message: (args: ValidationArguments) =>
+        messages.validation(args, 'fieldExists'),
+    },
+  )
   id: number
 
   @Field({ nullable: true })
