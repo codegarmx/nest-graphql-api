@@ -31,6 +31,7 @@ export class AdminResolver {
     return this.adminService.update(updateAdminInput.id, updateAdminInput)
   }
 
+  // Validate existance of the item
   @Mutation(() => DeleteItem)
   removeAdmin(@Args('id', { type: () => Int }) id: number) {
     return this.adminService.remove(id)

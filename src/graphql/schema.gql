@@ -18,8 +18,6 @@ input CreateAdminInput {
   email: String!
   firstName: String!
   lastName: String!
-  password: String!
-  passwordConfirmation: String!
 }
 
 type DeleteItem {
@@ -31,6 +29,7 @@ type DeleteItem {
 type Mutation {
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
   removeAdmin(id: Int!): DeleteItem!
+  signIn(signInInput: SignInInput!): Auth!
   signUp(signUpInput: CreateAdminInput!): Auth!
   updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
 }
@@ -38,6 +37,11 @@ type Mutation {
 type Query {
   admin(id: Int!): Admin!
   admins: [Admin!]!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
 }
 
 input UpdateAdminInput {

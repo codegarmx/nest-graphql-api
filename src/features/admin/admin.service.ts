@@ -20,8 +20,6 @@ export class AdminService {
   async create(createAdminInput: CreateAdminInput): Promise<AdminModel> {
     const securePassword = this.encryption.securePassword()
 
-    delete createAdminInput.passwordConfirmation
-
     //TODO: if user was created, send email
 
     const newAdmin = await this.prismaService.admin.create({
@@ -46,6 +44,12 @@ export class AdminService {
     return admin
   }
 
+  async findBy(field: string, value: any): Promise<AdminModel> {
+    return await this.prismaService.admin.findFirst({
+      where: { [field]: value },
+    })
+  }
+
   async update(
     id: number,
     updateAdminInput: UpdateAdminInput,
@@ -57,7 +61,7 @@ export class AdminService {
 
       delete updateAdminInput.passwordConfirmation
 
-      Object.assign(hashedPassword, { password: hashedPassword })
+      Object.assign(updateAdminInput, { password: hashedPassword })
     }
     return await this.prismaService.admin.update({
       where: { id },
