@@ -3,4 +3,5 @@ export const fieldData = {
   lastName: 'apellido',
   email: 'correo electrónico',
   id: 'id',
+  password: 'contraseña',
 }

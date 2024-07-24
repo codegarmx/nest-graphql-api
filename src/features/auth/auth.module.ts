@@ -1,6 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 
+import { Encryption } from '@app/libs'
+
 import { AdminModule } from '@app/features/admin/admin.module'
 
 import { AuthService } from './auth.service'
@@ -17,6 +19,7 @@ import {
     AuthService,
     AdminAccessTokenStrategy,
     AdminResfreshTokenStrategy,
+    Encryption,
   ],
   exports: [AuthService],
 })

@@ -5,8 +5,6 @@ import { PrismaService } from '@app/prisma/prisma.service'
 
 import { Encryption } from '@app/libs'
 
-import { AuthService } from '@app/features/auth/auth.service'
-
 import { DeleteItem } from '@app/entities'
 
 import { CreateAdminInput } from './dto/create-admin.input'
@@ -17,11 +15,12 @@ export class AdminService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly encryption: Encryption,
-    private readonly authService: AuthService,
   ) {}
 
   async create(createAdminInput: CreateAdminInput): Promise<AdminModel> {
     const securePassword = this.encryption.securePassword()
+
+    delete createAdminInput.passwordConfirmation
 
     //TODO: if user was created, send email
 
@@ -31,15 +30,6 @@ export class AdminService {
         password: await this.encryption.hash(securePassword),
       },
     })
-
-    const jwtTokens = await this.authService.createJwtToken({
-      sub: newAdmin.id,
-      name: newAdmin.firstName,
-      lastName: newAdmin.lastName,
-      email: newAdmin.email,
-    })
-
-    await this.updateRefreshToken(newAdmin.id, jwtTokens.refreshToken)
 
     return newAdmin
   }
@@ -56,7 +46,6 @@ export class AdminService {
     return admin
   }
 
-  //TODO: create unique field decorator rule
   async update(
     id: number,
     updateAdminInput: UpdateAdminInput,
@@ -65,6 +54,8 @@ export class AdminService {
       const hashedPassword = await this.encryption.hash(
         updateAdminInput.password,
       )
+
+      delete updateAdminInput.passwordConfirmation
 
       Object.assign(hashedPassword, { password: hashedPassword })
     }

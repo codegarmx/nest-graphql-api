@@ -2,11 +2,12 @@ import { InputType, Field } from '@nestjs/graphql'
 import {
   IsEmail,
   IsNotEmpty,
+  IsStrongPassword,
   MinLength,
   ValidationArguments,
 } from 'class-validator'
 
-import { UniqueField } from '@app/decorators'
+import { UniqueField, ConfimField } from '@app/decorators'
 
 import { Message } from '@app/libs'
 
@@ -60,4 +61,27 @@ export class CreateAdminInput {
     },
   )
   email: string
+
+  @Field()
+  @IsNotEmpty({
+    message: (args: ValidationArguments) =>
+      messages.validation(args, 'isNotEmpty'),
+  })
+  @IsStrongPassword(
+    {
+      minLength: 12,
+      minLowercase: 1,
+      minNumbers: 1,
+      minUppercase: 1,
+    },
+    {
+      message: (args: ValidationArguments) =>
+        messages.validation(args, 'strongPassword'),
+    },
+  )
+  password: string
+
+  @Field()
+  @ConfimField('password', { message: 'Password did not match' })
+  passwordConfirmation: string
 }
