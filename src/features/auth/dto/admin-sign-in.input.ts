@@ -8,7 +8,7 @@ import { Message } from '@app/libs'
 const messages = new Message()
 
 @InputType()
-export class SignInInput {
+export class AdminSignInInput {
   @Field()
   @IsNotEmpty({
     message: (args: ValidationArguments) =>

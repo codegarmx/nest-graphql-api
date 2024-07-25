@@ -9,7 +9,7 @@ import { AdminService } from '@app/features/admin/admin.service'
 import { AdminJwtPayload } from './types'
 
 import { Auth } from './entities/auth.entity'
-import { SignInInput } from './dto/sign-in.input'
+import { AdminSignInInput } from './dto/admin-sign-in.input'
 
 @Injectable()
 export class AuthService {
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   //TODO: change for admins
-  async signIn(signInInput: SignInInput) {
+  async adminSignIn(signInInput: AdminSignInInput) {
     const admin = await this.adminService.findBy('email', signInInput.email)
 
     // Compare passwords
