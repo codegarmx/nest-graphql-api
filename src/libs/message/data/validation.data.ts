@@ -7,4 +7,5 @@ export const validationData = {
   strongPassword:
     'La {field} debe poseer al menos 12 caracteres, 1 mayúscula, 1 minuscula y un número',
   signInError: 'Combinación de email y contraseña incorrecta.',
+  fieldConfirmation: 'La {field} es incorrecta.',
 }

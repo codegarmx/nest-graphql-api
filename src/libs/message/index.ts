@@ -1,15 +1,18 @@
 import { ValidationArguments } from 'class-validator'
 
-import { validationData, fieldData } from './data'
+import { validationData, fieldData, exceptionData } from './data'
 
 export class Message {
   validation(args: ValidationArguments, rule: string) {
-    //console.log('my data =====>', args)
     return this.generateValidationMessage(
       validationData[rule],
       fieldData[args.property],
       args.constraints,
     )
+  }
+
+  exception(rule: string, field: string = '') {
+    return exceptionData[rule].replaceAll('{field}', field)
   }
 
   private generateValidationMessage(

@@ -4,4 +4,5 @@ export const fieldData = {
   email: 'correo electrónico',
   id: 'id',
   password: 'contraseña',
+  passwordConfirmation: 'confirmación de contraseña',
 }

@@ -37,16 +37,25 @@ export class UpdateAdminInput extends PartialType(CreateAdminInput) {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsStrongPassword({
-    minLength: 12,
-    minLowercase: 1,
-    minNumbers: 1,
-    minUppercase: 1,
-  })
+  @IsStrongPassword(
+    {
+      minLength: 12,
+      minLowercase: 1,
+      minNumbers: 1,
+      minUppercase: 1,
+    },
+    {
+      message: (args: ValidationArguments) =>
+        messages.validation(args, 'strongPassword'),
+    },
+  )
   password?: string
 
   @Field({ nullable: true })
   @ValidateIf((o) => o.password !== undefined)
-  @ConfimField('password', { message: 'Password did not match' })
+  @ConfimField('password', {
+    message: (args: ValidationArguments) =>
+      messages.validation(args, 'fieldConfirmation'),
+  })
   passwordConfirmation?: string
 }

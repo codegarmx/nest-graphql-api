@@ -3,7 +3,7 @@ import { Admin as AdminModel } from '@prisma/client'
 
 import { PrismaService } from '@app/prisma/prisma.service'
 
-import { Encryption } from '@app/libs'
+import { Encryption, Message } from '@app/libs'
 
 import { DeleteItem } from '@app/entities'
 
@@ -15,6 +15,7 @@ export class AdminService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly encryption: Encryption,
+    private readonly message: Message,
   ) {}
 
   async create(createAdminInput: CreateAdminInput): Promise<AdminModel> {
@@ -39,7 +40,8 @@ export class AdminService {
   async findOne(id: number): Promise<AdminModel> {
     const admin = await this.prismaService.admin.findFirst({ where: { id } })
 
-    if (!admin) throw new NotFoundException('Admin not found!')
+    if (!admin)
+      throw new NotFoundException(this.message.exception('notFound', 'Admin'))
 
     return admin
   }
@@ -85,7 +87,7 @@ export class AdminService {
         success: true,
       }
     } catch (err) {
-      throw new NotFoundException('Admin not found')
+      throw new NotFoundException(this.message.exception('notFound', 'Admin'))
     }
   }
 }
