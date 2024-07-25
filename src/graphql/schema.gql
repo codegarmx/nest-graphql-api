@@ -9,6 +9,16 @@ type Admin {
   lastName: String!
 }
 
+input AdminSignInInput {
+  email: String!
+  password: String!
+}
+
+type Auth {
+  jwt: String!
+  refreshJwt: String!
+}
+
 input CreateAdminInput {
   email: String!
   firstName: String!
@@ -22,8 +32,10 @@ type DeleteItem {
 }
 
 type Mutation {
+  adminSignIn(signInInput: AdminSignInInput!): Auth!
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
   removeAdmin(id: Int!): DeleteItem!
+  signUp(signUpInput: CreateAdminInput!): Auth!
   updateAdmin(updateAdminInput: UpdateAdminInput!): Admin!
 }
 

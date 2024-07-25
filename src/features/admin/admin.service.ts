@@ -3,9 +3,7 @@ import { Admin as AdminModel } from '@prisma/client'
 
 import { PrismaService } from '@app/prisma/prisma.service'
 
-import { Encryption } from '@app/libs'
-
-import { AuthService } from '@app/features/auth/auth.service'
+import { Encryption, Message } from '@app/libs'
 
 import { DeleteItem } from '@app/entities'
 
@@ -17,7 +15,7 @@ export class AdminService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly encryption: Encryption,
-    private readonly authService: AuthService,
+    private readonly message: Message,
   ) {}
 
   async create(createAdminInput: CreateAdminInput): Promise<AdminModel> {
@@ -32,15 +30,6 @@ export class AdminService {
       },
     })
 
-    const jwtTokens = await this.authService.createJwtToken({
-      sub: newAdmin.id,
-      name: newAdmin.firstName,
-      lastName: newAdmin.lastName,
-      email: newAdmin.email,
-    })
-
-    await this.updateRefreshToken(newAdmin.id, jwtTokens.refreshToken)
-
     return newAdmin
   }
 
@@ -51,9 +40,16 @@ export class AdminService {
   async findOne(id: number): Promise<AdminModel> {
     const admin = await this.prismaService.admin.findFirst({ where: { id } })
 
-    if (!!admin) throw new NotFoundException('Admin not found!')
+    if (!admin)
+      throw new NotFoundException(this.message.exception('notFound', 'Admin'))
 
     return admin
+  }
+
+  async findBy(field: string, value: any): Promise<AdminModel> {
+    return await this.prismaService.admin.findFirst({
+      where: { [field]: value },
+    })
   }
 
   async update(
@@ -65,7 +61,9 @@ export class AdminService {
         updateAdminInput.password,
       )
 
-      Object.assign(hashedPassword, { password: hashedPassword })
+      delete updateAdminInput.passwordConfirmation
+
+      Object.assign(updateAdminInput, { password: hashedPassword })
     }
     return await this.prismaService.admin.update({
       where: { id },
@@ -81,11 +79,15 @@ export class AdminService {
   }
 
   async remove(id: number): Promise<DeleteItem> {
-    await this.prismaService.admin.delete({ where: { id } })
+    try {
+      await this.prismaService.admin.delete({ where: { id } })
 
-    return {
-      id,
-      success: true,
+      return {
+        id,
+        success: true,
+      }
+    } catch (err) {
+      throw new NotFoundException(this.message.exception('notFound', 'Admin'))
     }
   }
 }
