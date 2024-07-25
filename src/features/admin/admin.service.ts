@@ -39,7 +39,7 @@ export class AdminService {
   async findOne(id: number): Promise<AdminModel> {
     const admin = await this.prismaService.admin.findFirst({ where: { id } })
 
-    if (!!admin) throw new NotFoundException('Admin not found!')
+    if (!admin) throw new NotFoundException('Admin not found!')
 
     return admin
   }
@@ -77,11 +77,15 @@ export class AdminService {
   }
 
   async remove(id: number): Promise<DeleteItem> {
-    await this.prismaService.admin.delete({ where: { id } })
+    try {
+      await this.prismaService.admin.delete({ where: { id } })
 
-    return {
-      id,
-      success: true,
+      return {
+        id,
+        success: true,
+      }
+    } catch (err) {
+      throw new NotFoundException('Admin not found')
     }
   }
 }
